@@ -12,3 +12,7 @@
 - Gulp.js as task runner
 - browsersync for live-reload in browsers
 - gulp-sass / gulp-minify / gulp-uglify / gulp-concat
+
+## Install
+
+  npm install
