@@ -24,34 +24,56 @@ var paths = {
 };
 
 // Static Server + watching scss/html files
-gulp.task('serve', ['scss'], function() {
+gulp.task('dev', ['scss'], function() {
 
     browserSync.init({
-        server: "./dist"
+        server: './dist'
     });
 
-    gulp.watch("src/*.html", ['views']);
-    gulp.watch("src/scss/*.scss", ['scss']);
-    gulp.watch("src/css/*.css", ['minify-css']);
-    gulp.watch("src/css/maps/*.map", ['sourcemaps']);
-    gulp.watch("src/js/*.js", ['minify-js']);
-    gulp.watch("dist/*").on('change', browserSync.reload);
+    gulp.watch('src/*.html', ['views']);
+    gulp.watch('src/scss/*.scss', ['scss']);
+    gulp.watch('src/css/*.css', ['copy-css']);
+    gulp.watch('src/css/maps/*.map', ['sourcemap']);
+    gulp.watch('src/lib/*.js', ['copy-lib']);
+    gulp.watch('src/js/*.js', ['minify-js']);
+    gulp.watch('dist/*').on('change', browserSync.reload);
 });
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('scss', function() {
-  return gulp.src("src/scss/*.scss")
+  return gulp.src('src/scss/*.scss')
       .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(sourcemaps.write(('maps')))
-      .pipe(gulp.dest("src/scss/"))
+      .pipe(gulp.dest('src/scss/'))
       .pipe(browserSync.stream());
 });
 
 // Copy changed *.html to dist
 gulp.task('views', function() {
-  return gulp.src("src/*.html")
-      .pipe(gulp.dest("dist/"))
+  return gulp.src('src/*.html')
+      .pipe(gulp.dest('dist/'))
+      .pipe(browserSync.stream());
+});
+
+// copy css to dist/css/
+gulp.task('copy-css', function() {
+  return gulp.src('src/css/*.css')
+    .pipe(gulp.dest('dist/css/'))
+    .pipe(browserSync.stream());
+});
+
+// Copy sourcemap to dist
+gulp.task('sourcemap', function() {
+  return gulp.src('src/scss/maps/*.css.map')
+      .pipe(gulp.dest('dist/css/maps'))
+      .pipe(browserSync.stream());
+});
+
+// Copy lib to dist
+gulp.task('copy-lib', function() {
+  return gulp.src('src/lib/**/**/*.js')
+      .pipe(gulp.dest('dist/lib'))
       .pipe(browserSync.stream());
 });
 
@@ -64,16 +86,9 @@ gulp.task('minify-css', function() {
     .pipe(browserSync.stream());
 });
 
-// Copy sourcemaps to dist
-gulp.task('sourcemaps', function() {
-  return gulp.src("src/scss/maps/*.map")
-      .pipe(gulp.dest("dist/css/maps/"))
-      .pipe(browserSync.stream());
-});
-
 // uglify an concatenate *.js files
 gulp.task('minify-js', function() {
-    return gulp.src("src/js/*.js")
+    return gulp.src('src/js/*.js')
         .pipe(rename('script.concat.js'))
         .pipe(concat('script.concat.js'))
         .pipe(gulp.dest('src/js-concat'))
@@ -84,9 +99,9 @@ gulp.task('minify-js', function() {
 });
 
 // Delete the dist directory
-gulp.task('clean', function() {
+gulp.task('dist-clean', function() {
  return gulp.src(bases.dist)
- .pipe(clean());
+        .pipe(clean());
 });
 
-gulp.task('default', ['serve']);
+gulp.task('default', ['dev']);

@@ -3,9 +3,9 @@
 ## Aims
 
 - Set up starting point for web projects with common methods and task runner
-- Using browserSync for updating the page live
+- Using browserSync for updating the page live in development mode
 - Using SCSS to enhance CSS-Coding
-- Using straigth forward minify-css and minify-js to produce low-footprint output
+- Using straight forward minify-css and minify-js to produce low-footprint output
 
 ## Used in this projects
 

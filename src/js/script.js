@@ -3,3 +3,5 @@ var script1 = function(one) {
 }
 
 script1(" message from script 1");
+
+testlib();

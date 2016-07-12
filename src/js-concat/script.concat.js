@@ -4,6 +4,8 @@ var script1 = function(one) {
 
 script1(" message from script 1");
 
+testlib();
+
 var script2 = function(two) {
   console.log('this is script 2' + two);
 }
