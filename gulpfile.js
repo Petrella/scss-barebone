@@ -48,6 +48,9 @@ gulp.task('minify-css', function() {
 // uglify an concatenate *.js files
 gulp.task('minify-js', function() {
     return gulp.src("src/js/*.js")
+        .pipe(rename('script.concat.js'))
+        .pipe(concat('script.concat.js'))
+        .pipe(gulp.dest('src/js-concat'))
         .pipe(rename('script.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist/js/'))
