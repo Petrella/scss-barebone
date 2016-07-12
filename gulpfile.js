@@ -1,11 +1,27 @@
-//All Requirements for the project
+// All Requirements for the project
 var gulp        = require('gulp');
 var browserSync = require('browser-sync').create();
 var sass        = require('gulp-sass');
+var sourcemaps  = require('gulp-sourcemaps');
 var cleancss    = require('gulp-clean-css');
 var rename      = require('gulp-rename');
 var concat      = require('gulp-concat');
 var uglify      = require('gulp-uglify');
+
+// base directories
+var bases = {
+ src: 'src/',
+ dist: 'dist/',
+};
+
+// project paths
+var paths = {
+ script: ['src/js/**/*.js'],
+ scss: ['src/scss/**/*.scss'],
+ css: ['dist/css/**/*.scss'],
+ html: ['index.html'],
+ extras: ['crossdomain.xml', 'humans.txt', 'manifest.appcache', 'robots.txt', 'favicon.ico'],
+};
 
 // Static Server + watching scss/html files
 gulp.task('serve', ['scss'], function() {
@@ -17,6 +33,7 @@ gulp.task('serve', ['scss'], function() {
     gulp.watch("src/*.html", ['views']);
     gulp.watch("src/scss/*.scss", ['scss']);
     gulp.watch("src/css/*.css", ['minify-css']);
+    gulp.watch("src/css/maps/*.map", ['sourcemaps']);
     gulp.watch("src/js/*.js", ['minify-js']);
     gulp.watch("dist/*").on('change', browserSync.reload);
 });
@@ -24,8 +41,10 @@ gulp.task('serve', ['scss'], function() {
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('scss', function() {
   return gulp.src("src/scss/*.scss")
-      .pipe(sass())
-      .pipe(gulp.dest("src/css/"))
+      .pipe(sourcemaps.init())
+      .pipe(sass().on('error', sass.logError))
+      .pipe(sourcemaps.write(('maps')))
+      .pipe(gulp.dest("src/scss/"))
       .pipe(browserSync.stream());
 });
 
@@ -45,6 +64,13 @@ gulp.task('minify-css', function() {
     .pipe(browserSync.stream());
 });
 
+// Copy sourcemaps to dist
+gulp.task('sourcemaps', function() {
+  return gulp.src("src/scss/maps/*.map")
+      .pipe(gulp.dest("dist/css/maps/"))
+      .pipe(browserSync.stream());
+});
+
 // uglify an concatenate *.js files
 gulp.task('minify-js', function() {
     return gulp.src("src/js/*.js")
@@ -55,6 +81,12 @@ gulp.task('minify-js', function() {
         .pipe(uglify())
         .pipe(gulp.dest('dist/js/'))
         .pipe(browserSync.stream());
+});
+
+// Delete the dist directory
+gulp.task('clean', function() {
+ return gulp.src(bases.dist)
+ .pipe(clean());
 });
 
 gulp.task('default', ['serve']);
