@@ -32,7 +32,6 @@ gulp.task('dev', ['scss'], function() {
 
     gulp.watch('src/*.html', ['views']);
     gulp.watch('src/scss/*.scss', ['scss']);
-    gulp.watch('src/css/*.css', ['copy-css']);
     gulp.watch('src/css/maps/*.map', ['sourcemap']);
     gulp.watch('src/lib/*.js', ['copy-lib']);
     gulp.watch('src/js/*.js', ['minify-js']);
@@ -45,7 +44,7 @@ gulp.task('scss', function() {
       .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(sourcemaps.write(('maps')))
-      .pipe(gulp.dest('src/scss/'))
+      .pipe(gulp.dest('dist/css/'))
       .pipe(browserSync.stream());
 });
 
@@ -54,13 +53,6 @@ gulp.task('views', function() {
   return gulp.src('src/*.html')
       .pipe(gulp.dest('dist/'))
       .pipe(browserSync.stream());
-});
-
-// copy css to dist/css/
-gulp.task('copy-css', function() {
-  return gulp.src('src/css/*.css')
-    .pipe(gulp.dest('dist/css/'))
-    .pipe(browserSync.stream());
 });
 
 // Copy sourcemap to dist

@@ -1,13 +1,12 @@
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 5px; }
+
 h1 {
-  color: red; }
+  font-weight: 700; }
 
 h2 {
-  color: blue; }
-
-p {
-  color: black; }
-
-a {
-  text-align: center; }
+  font-weight: 700;
+  margin-bottom: 10px; }
 
 /*# sourceMappingURL=maps/style.css.map */
